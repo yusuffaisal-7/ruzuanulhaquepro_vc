@@ -1,0 +1,165 @@
+---
+export interface Props {
+  profileImage?: string;
+}
+const { profileImage = "/Screenshot 2025-07-03 at 11.00.27 AM.png" } = Astro.props;
+const backgroundImage = "/Screenshot 2025-07-03 at 11.00.27 AM.png";
+---
+
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background Image -->
+  <div class="absolute inset-0 z-0">
+    <img 
+      src={backgroundImage} 
+      alt="Dr. Mohammad Razuanul Hoque" 
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  </div>
+  
+  <!-- Content -->
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-10 items-center min-h-[80vh] py-16 lg:py-32">
+      <!-- Left Content (mobile: text, image, then rest; desktop: text left, image right) -->
+      <div class="flex flex-col w-full">
+        <div class="text-white flex flex-col items-center lg:items-start text-center lg:text-left">
+          <h1 class="text-4xl xs:text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight drop-shadow-xl">
+            <span class="block animate-fade-in-up">Dr. Mohammad</span>
+            <span class="block text-3xl xs:text-4xl sm:text-5xl lg:text-6xl mt-2 animate-fade-in-up" style="animation-delay: 0.2s;">Razuanul Hoque</span>
+          </h1>
+        </div>
+        <!-- Mobile: Show image right after name/title -->
+        <div class="block lg:hidden w-full flex justify-center my-6">
+          <div class="relative">
+            <div class="w-72 h-72 xs:w-80 xs:h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl animate-fade-in-up" style="animation-delay: 0.3s;">
+              <img 
+                src={profileImage} 
+                alt="Dr. Mohammad Razuanul Hoque" 
+                class="w-full h-full object-cover object-center"
+              />
+            </div>
+            <div class="absolute inset-0 w-full h-full rounded-full border-2 border-yellow-400 opacity-50 animate-pulse pointer-events-none"></div>
+          </div>
+        </div>
+        <div class="text-white flex flex-col items-center lg:items-start text-center lg:text-left">
+          <p class="text-lg xs:text-xl sm:text-2xl mb-2 leading-relaxed animate-fade-in-up text-gray-200" style="animation-delay: 0.4s;">
+            Professor, Department of Biochemistry and Molecular Biology
+          </p>
+          <p class="text-base sm:text-lg mb-6 text-gray-300 animate-fade-in-up" style="animation-delay: 0.6s;">
+            Noakhali Science and Technology University
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 items-center lg:items-start animate-fade-in-up w-full justify-center lg:justify-start" style="animation-delay: 0.8s;">
+            <a 
+              href="mailto:pro-vc@nstu.edu.bd" 
+              class="contact-btn group"
+            >
+              <span class="contact-text">Get In Touch</span>
+              <div class="arrow-container">
+                <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path>
+                </svg>
+              </div>
+            </a>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-10 w-full max-w-2xl animate-fade-in-up" style="animation-delay: 1s;">
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl hover:bg-white/20 transition-all duration-300 shadow-md">
+              <div class="text-2xl sm:text-3xl font-bold text-white mb-1">PhD</div>
+              <div class="text-gray-200 font-medium text-sm sm:text-base">Molecular Biology</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl hover:bg-white/20 transition-all duration-300 shadow-md">
+              <div class="text-2xl sm:text-3xl font-bold text-white mb-1">Professor</div>
+              <div class="text-gray-200 font-medium text-sm sm:text-base">NSTU</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl hover:bg-white/20 transition-all duration-300 shadow-md">
+              <div class="text-2xl sm:text-3xl font-bold text-white mb-1">Research</div>
+              <div class="text-gray-200 font-medium text-sm sm:text-base">Excellence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Desktop: Show image on the right -->
+      <div class="hidden lg:flex justify-center lg:justify-end fade-in-scroll mt-10 lg:mt-0">
+        <div class="relative">
+          <div class="w-48 h-48 xs:w-60 xs:h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white shadow-2xl animate-fade-in-up" style="animation-delay: 1.6s;">
+            <img 
+              src={profileImage} 
+              alt="Dr. Mohammad Razuanul Hoque" 
+              class="w-full h-full object-cover object-center"
+            />
+          </div>
+          <div class="absolute inset-0 w-full h-full rounded-full border-2 border-yellow-400 opacity-50 animate-pulse pointer-events-none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow z-10">
+    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</section>
+
+<style>
+  .contact-btn {
+    @apply inline-flex items-center bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-yellow-300 hover:shadow-lg transform hover:-translate-y-1;
+    gap: 12px;
+  }
+
+  .contact-text {
+    @apply font-medium;
+  }
+
+  .arrow-container {
+    @apply w-10 h-10 bg-black rounded-full flex items-center justify-center transition-all duration-300;
+  }
+
+  .arrow-icon {
+    @apply w-5 h-5 text-yellow-400 transition-all duration-300;
+    transform: rotate(-45deg);
+  }
+
+  .contact-btn:hover .arrow-icon {
+    transform: rotate(0deg);
+  }
+
+  .contact-btn:hover .arrow-container {
+    @apply bg-gray-800;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+      transform: translate3d(0,-15px,0);
+    }
+    70% {
+      transform: translate3d(0,-7px,0);
+    }
+    90% {
+      transform: translate3d(0,-2px,0);
+    }
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+</style>

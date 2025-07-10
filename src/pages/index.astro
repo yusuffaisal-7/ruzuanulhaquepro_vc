@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Research from '../components/Research.astro';
+import Blog from '../components/Blog.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import content from '../data/content.json';
+
+const profileImage = content.profile?.image || "/Screenshot 2025-07-03 at 11.00.27 AM.png";
+---
+
+<Layout title="Dr. Academic Excellence - Pro Vice-Chancellor Portfolio">
+  <Header />
+  <main>
+    <Hero profileImage={profileImage} />
+    <About />
+    <Experience />
+    <Research />
+    <Blog />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>

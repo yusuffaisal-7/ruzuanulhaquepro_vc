@@ -1,0 +1,165 @@
+---
+const researchAreas = [
+  {
+    title: "Artificial Intelligence & Machine Learning",
+    description: "Developing advanced algorithms for predictive analytics, natural language processing, and computer vision applications in educational technology.",
+    publications: 45,
+    citations: 1250,
+    image: "https://images.pexels.com/photos/8566473/pexels-photo-8566473.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    title: "Educational Technology Innovation",
+    description: "Creating scalable solutions for digital learning environments, assessment systems, and personalized education platforms.",
+    publications: 38,
+    citations: 920,
+    image: "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    title: "Sustainable Computing Systems",
+    description: "Research focused on energy-efficient computing architectures and environmentally sustainable technology solutions.",
+    publications: 42,
+    citations: 1100,
+    image: "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    title: "Data Science & Analytics",
+    description: "Advanced statistical modeling and big data analytics for educational insights and institutional decision-making.",
+    publications: 35,
+    citations: 850,
+    image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=800"
+  }
+];
+
+const recentPublications = [
+  {
+    title: "Deep Learning Approaches for Personalized Learning Path Optimization",
+    journal: "IEEE Transactions on Learning Technologies",
+    year: "2024",
+    citations: 127,
+    type: "Journal Article"
+  },
+  {
+    title: "Sustainable AI: Green Computing Paradigms for Educational Institutions",
+    journal: "Nature Computer Science",
+    year: "2023",
+    citations: 203,
+    type: "Research Paper"
+  },
+  {
+    title: "Blockchain-Based Credential Verification Systems in Higher Education",
+    journal: "ACM Computing Surveys",
+    year: "2023",
+    citations: 156,
+    type: "Survey"
+  },
+  {
+    title: "Adaptive Learning Analytics: A Comprehensive Framework",
+    journal: "Educational Technology & Society",
+    year: "2023",
+    citations: 98,
+    type: "Framework"
+  }
+];
+---
+
+<section id="research" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="fade-in-scroll">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-bold text-navy-900 mb-6">Research & Publications</h2>
+        <p class="text-xl text-charcoal-600 max-w-3xl mx-auto">
+          Pioneering research that bridges theoretical foundations with practical applications, driving innovation in technology and education.
+        </p>
+      </div>
+
+      <!-- Research Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16 fade-in-scroll">
+        <div class="text-center p-6 bg-gradient-to-br from-navy-600 to-navy-700 text-white rounded-xl">
+          <div class="text-3xl font-bold mb-2">150+</div>
+          <div class="text-navy-100">Publications</div>
+        </div>
+        <div class="text-center p-6 bg-gradient-to-br from-navy-600 to-navy-700 text-white rounded-xl">
+          <div class="text-3xl font-bold mb-2">4,200+</div>
+          <div class="text-navy-100">Citations</div>
+        </div>
+        <div class="text-center p-6 bg-gradient-to-br from-navy-600 to-navy-700 text-white rounded-xl">
+          <div class="text-3xl font-bold mb-2">28</div>
+          <div class="text-navy-100">h-index</div>
+        </div>
+        <div class="text-center p-6 bg-gradient-to-br from-navy-600 to-navy-700 text-white rounded-xl">
+          <div class="text-3xl font-bold mb-2">15+</div>
+          <div class="text-navy-100">Collaborations</div>
+        </div>
+      </div>
+
+      <!-- Research Areas -->
+      <div class="mb-20">
+        <h3 class="text-3xl font-bold text-navy-900 text-center mb-12 fade-in-scroll">Research Areas</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {researchAreas.map((area, index) => (
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden fade-in-scroll">
+              <div class="h-48 overflow-hidden">
+                <img 
+                  src={area.image} 
+                  alt={area.title}
+                  class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+              <div class="p-6">
+                <h4 class="text-xl font-bold text-navy-900 mb-3">{area.title}</h4>
+                <p class="text-charcoal-600 mb-4 leading-relaxed">{area.description}</p>
+                <div class="flex justify-between items-center text-sm">
+                  <span class="bg-navy-100 text-navy-800 px-3 py-1 rounded-full">
+                    {area.publications} Publications
+                  </span>
+                  <span class="text-charcoal-500">
+                    {area.citations} Citations
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Recent Publications -->
+      <div class="fade-in-scroll">
+        <h3 class="text-3xl font-bold text-navy-900 text-center mb-12">Recent Publications</h3>
+        <div class="space-y-6">
+          {recentPublications.map((pub, index) => (
+            <div class="bg-charcoal-50 p-6 rounded-xl hover:bg-charcoal-100 transition-colors duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                <h4 class="text-lg font-semibold text-navy-900 mb-2 sm:mb-0">{pub.title}</h4>
+                <div class="flex items-center space-x-4 text-sm">
+                  <span class="bg-navy-100 text-navy-800 px-2 py-1 rounded">{pub.type}</span>
+                  <span class="text-charcoal-600">{pub.year}</span>
+                </div>
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <p class="text-charcoal-700 font-medium mb-2 sm:mb-0">{pub.journal}</p>
+                <div class="flex items-center text-sm text-charcoal-600">
+                  <svg class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {pub.citations} citations
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div class="text-center mt-8">
+          <a 
+            href="/publications" 
+            class="inline-flex items-center px-6 py-3 bg-navy-700 text-white font-semibold rounded-lg hover:bg-navy-800 transition-colors duration-300"
+          >
+            View All Publications
+            <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

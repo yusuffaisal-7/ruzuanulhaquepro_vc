@@ -1,0 +1,37 @@
+.message-card {
+  @apply flex items-start bg-white rounded-2xl shadow-lg border border-slate-200 p-6 gap-6 relative transition-all duration-300;
+}
+.message-card.unread {
+  @apply border-navy-500 bg-navy-50 shadow-xl;
+}
+.message-avatar {
+  @apply w-14 h-14 rounded-full bg-navy-100 flex items-center justify-center text-2xl font-bold text-navy-700 shadow;
+  min-width: 3.5rem;
+}
+.message-actions {
+  @apply flex gap-3 mt-4;
+}
+.message-delete {
+  @apply px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 font-semibold shadow-sm hover:bg-red-100 hover:text-red-800 transition-colors duration-200 text-sm;
+}
+.message-read {
+  @apply px-4 py-2 rounded-lg border border-navy-200 bg-white text-navy-700 font-semibold shadow-sm hover:bg-navy-50 hover:text-navy-800 transition-colors duration-200 text-sm;
+}
+.message-header {
+  @apply flex justify-between items-center mb-1;
+}
+.message-email {
+  @apply text-xs text-gray-500 mb-1;
+}
+.message-body {
+  @apply text-gray-800 mt-2 mb-2 text-base;
+}
+.message-meta {
+  @apply text-xs text-gray-400 mb-1;
+}
+.message-name {
+  @apply font-semibold text-navy-900 text-lg;
+}
+.message-timestamp {
+  @apply text-xs text-gray-400 font-mono;
+} 
