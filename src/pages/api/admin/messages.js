@@ -10,19 +10,26 @@ export async function GET({ request }) {
     
     let messages = [];
     
-    // Try to read from /tmp first (Netlify serverless)
+    // Try to read from public/data first (more persistent on Netlify)
     try {
-      const tmpPath = path.join('/tmp', 'messages.json');
-      const data = await fs.readFile(tmpPath, 'utf-8');
+      const publicPath = path.join(process.cwd(), 'public', 'data', 'messages.json');
+      const data = await fs.readFile(publicPath, 'utf-8');
       messages = JSON.parse(data).messages || [];
-    } catch (tmpError) {
-      // If /tmp doesn't work, try original location
+    } catch (publicError) {
+      // If public/data doesn't work, try src/data
       try {
         const filePath = path.resolve('src/data/messages.json');
         const data = await fs.readFile(filePath, 'utf-8');
         messages = JSON.parse(data).messages || [];
-      } catch (originalError) {
-        console.log('Could not read messages from either location');
+      } catch (srcError) {
+        // If neither works, try /tmp as last resort
+        try {
+          const tmpPath = path.join('/tmp', 'messages.json');
+          const data = await fs.readFile(tmpPath, 'utf-8');
+          messages = JSON.parse(data).messages || [];
+        } catch (tmpError) {
+          console.log('Could not read messages from any location');
+        }
       }
     }
     

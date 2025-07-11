@@ -5,6 +5,7 @@ export async function POST({ request }) {
   try {
     const formData = await request.formData();
     const messageData = {
+      id: Date.now() + Math.random().toString(36).substring(2, 8),
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
       email: formData.get('email'),
@@ -15,12 +16,18 @@ export async function POST({ request }) {
       read: false
     };
 
-    // For Netlify, we'll use a different approach
-    // Option 1: Store in /tmp directory (temporary, will be lost on function restart)
-    // Option 2: Use environment variables or external service
-    // For now, let's try the /tmp approach as a quick fix
+    // For Netlify, we need a more persistent solution
+    // Let's try to write to the public directory which should be writable
+    const messagesPath = path.join(process.cwd(), 'public', 'data', 'messages.json');
     
-    const messagesPath = path.join('/tmp', 'messages.json');
+    // Ensure the directory exists
+    const dataDir = path.dirname(messagesPath);
+    try {
+      await fs.access(dataDir);
+    } catch {
+      await fs.mkdir(dataDir, { recursive: true });
+    }
+    
     let messages = { messages: [] };
     
     try {
@@ -33,12 +40,12 @@ export async function POST({ request }) {
     messages.messages.unshift(messageData);
     await fs.writeFile(messagesPath, JSON.stringify(messages, null, 2));
     
-    // Also try to write to the original location as fallback
+    // Also try to write to src/data as backup
     try {
-      const originalPath = path.join(process.cwd(), 'src/data/messages.json');
-      await fs.writeFile(originalPath, JSON.stringify(messages, null, 2));
-    } catch (writeError) {
-      console.log('Could not write to original location:', writeError.message);
+      const backupPath = path.join(process.cwd(), 'src/data/messages.json');
+      await fs.writeFile(backupPath, JSON.stringify(messages, null, 2));
+    } catch (backupError) {
+      console.log('Could not write backup:', backupError.message);
     }
     
     return new Response(JSON.stringify({ success: true }), {

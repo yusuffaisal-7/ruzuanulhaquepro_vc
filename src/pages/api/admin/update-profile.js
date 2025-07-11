@@ -41,30 +41,34 @@ export async function POST({ request }) {
         });
       }
       
-      // For Netlify, we'll store in /tmp and return a temporary URL
-      // In production, you should use a cloud storage service like AWS S3 or Cloudinary
+      // For Netlify, store in public/uploads directory
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      try {
+        await fs.access(uploadsDir);
+      } catch {
+        await fs.mkdir(uploadsDir, { recursive: true });
+      }
+      
       const timestamp = Date.now();
       const randomString = Math.random().toString(36).substring(2, 8);
       const extension = path.extname(imageFile.name) || '.jpg';
       const filename = `profile-${timestamp}-${randomString}${extension}`;
+      const filepath = path.join(uploadsDir, filename);
       
-      // Store in /tmp for now
-      const tmpPath = path.join('/tmp', filename);
+      // Save file
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      await fs.writeFile(tmpPath, buffer);
+      await fs.writeFile(filepath, buffer);
       
       profileData.image = `/uploads/${filename}`;
-      
-      // Note: In a real production environment, you should upload to cloud storage
-      // and return the cloud URL instead of a local path
     }
     
     // Read current content - try multiple locations
     let contentData = { profile: {} };
     const contentPaths = [
-      path.join('/tmp', 'content.json'),
-      path.join(process.cwd(), 'src/data/content.json')
+      path.join(process.cwd(), 'public', 'data', 'content.json'),
+      path.join(process.cwd(), 'src/data/content.json'),
+      path.join('/tmp', 'content.json')
     ];
     
     for (const contentPath of contentPaths) {
@@ -80,11 +84,18 @@ export async function POST({ request }) {
     // Update profile, keeping existing data for fields not provided
     contentData.profile = { ...contentData.profile, ...profileData };
     
-    // Write back to /tmp (Netlify compatible)
-    const tmpContentPath = path.join('/tmp', 'content.json');
-    await fs.writeFile(tmpContentPath, JSON.stringify(contentData, null, 2));
+    // Write back to public/data (more persistent on Netlify)
+    const publicDataDir = path.join(process.cwd(), 'public', 'data');
+    try {
+      await fs.access(publicDataDir);
+    } catch {
+      await fs.mkdir(publicDataDir, { recursive: true });
+    }
     
-    // Also try to write to original location as fallback
+    const publicContentPath = path.join(publicDataDir, 'content.json');
+    await fs.writeFile(publicContentPath, JSON.stringify(contentData, null, 2));
+    
+    // Also try to write to original location as backup
     try {
       const originalContentPath = path.join(process.cwd(), 'src/data/content.json');
       await fs.writeFile(originalContentPath, JSON.stringify(contentData, null, 2));
