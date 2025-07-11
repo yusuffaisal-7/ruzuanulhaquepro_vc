@@ -1,5 +1,3 @@
-import fs from 'fs/promises';
-import path from 'path';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = 'your-secret-key-change-in-production';
@@ -41,72 +39,27 @@ export async function POST({ request }) {
         });
       }
       
-      // For Netlify, store in public/uploads directory
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-      try {
-        await fs.access(uploadsDir);
-      } catch {
-        await fs.mkdir(uploadsDir, { recursive: true });
-      }
+      // For Netlify serverless, we can't save files reliably
+      // In production, you should use cloud storage (AWS S3, Cloudinary, etc.)
+      console.log('Image upload received:', {
+        name: imageFile.name,
+        size: imageFile.size,
+        type: imageFile.type
+      });
       
-      const timestamp = Date.now();
-      const randomString = Math.random().toString(36).substring(2, 8);
-      const extension = path.extname(imageFile.name) || '.jpg';
-      const filename = `profile-${timestamp}-${randomString}${extension}`;
-      const filepath = path.join(uploadsDir, filename);
-      
-      // Save file
-      const arrayBuffer = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      await fs.writeFile(filepath, buffer);
-      
-      profileData.image = `/uploads/${filename}`;
+      // For demo purposes, we'll just acknowledge the upload
+      profileData.image = '/uploads/default-profile.jpg'; // Use existing image
     }
     
-    // Read current content - try multiple locations
-    let contentData = { profile: {} };
-    const contentPaths = [
-      path.join(process.cwd(), 'public', 'data', 'content.json'),
-      path.join(process.cwd(), 'src/data/content.json'),
-      path.join('/tmp', 'content.json')
-    ];
+    // For Netlify serverless, we can't write to files reliably
+    // In production, you should use a database to store profile updates
     
-    for (const contentPath of contentPaths) {
-      try {
-        const data = await fs.readFile(contentPath, 'utf-8');
-        contentData = JSON.parse(data);
-        break;
-      } catch (error) {
-        console.log(`Could not read from ${contentPath}:`, error.message);
-      }
-    }
-    
-    // Update profile, keeping existing data for fields not provided
-    contentData.profile = { ...contentData.profile, ...profileData };
-    
-    // Write back to public/data (more persistent on Netlify)
-    const publicDataDir = path.join(process.cwd(), 'public', 'data');
-    try {
-      await fs.access(publicDataDir);
-    } catch {
-      await fs.mkdir(publicDataDir, { recursive: true });
-    }
-    
-    const publicContentPath = path.join(publicDataDir, 'content.json');
-    await fs.writeFile(publicContentPath, JSON.stringify(contentData, null, 2));
-    
-    // Also try to write to original location as backup
-    try {
-      const originalContentPath = path.join(process.cwd(), 'src/data/content.json');
-      await fs.writeFile(originalContentPath, JSON.stringify(contentData, null, 2));
-    } catch (writeError) {
-      console.log('Could not write to original location:', writeError.message);
-    }
+    console.log('Profile update received:', profileData);
     
     return new Response(JSON.stringify({ 
       success: true,
-      message: 'Profile updated successfully',
-      profile: contentData.profile
+      message: 'Profile update received successfully! In production, this would be saved to a database.',
+      profile: profileData
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

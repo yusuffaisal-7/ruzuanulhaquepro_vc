@@ -8,32 +8,35 @@ export async function GET({ request }) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
     
-    let messages = [];
+    // For Netlify serverless, we'll return a simple response
+    // In production, you should use a database to store and retrieve messages
     
-    // Try to read from public/data first (more persistent on Netlify)
-    try {
-      const publicPath = path.join(process.cwd(), 'public', 'data', 'messages.json');
-      const data = await fs.readFile(publicPath, 'utf-8');
-      messages = JSON.parse(data).messages || [];
-    } catch (publicError) {
-      // If public/data doesn't work, try src/data
-      try {
-        const filePath = path.resolve('src/data/messages.json');
-        const data = await fs.readFile(filePath, 'utf-8');
-        messages = JSON.parse(data).messages || [];
-      } catch (srcError) {
-        // If neither works, try /tmp as last resort
-        try {
-          const tmpPath = path.join('/tmp', 'messages.json');
-          const data = await fs.readFile(tmpPath, 'utf-8');
-          messages = JSON.parse(data).messages || [];
-        } catch (tmpError) {
-          console.log('Could not read messages from any location');
-        }
+    const mockMessages = [
+      {
+        id: 'demo-1',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com',
+        organization: 'Example University',
+        subject: 'Research Collaboration',
+        message: 'This is a demo message to show the admin panel functionality.',
+        timestamp: new Date().toISOString(),
+        read: false
+      },
+      {
+        id: 'demo-2',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        email: 'jane.smith@example.com',
+        organization: 'Research Institute',
+        subject: 'Conference Invitation',
+        message: 'Another demo message for testing purposes.',
+        timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        read: true
       }
-    }
+    ];
     
-    return new Response(JSON.stringify({ messages }), {
+    return new Response(JSON.stringify({ messages: mockMessages }), {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {

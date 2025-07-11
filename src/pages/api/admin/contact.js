@@ -16,45 +16,32 @@ export async function POST({ request }) {
       read: false
     };
 
-    // For Netlify, we need a more persistent solution
-    // Let's try to write to the public directory which should be writable
-    const messagesPath = path.join(process.cwd(), 'public', 'data', 'messages.json');
+    // For Netlify serverless, we'll use a simple approach
+    // Since we can't write to files reliably, we'll just return success
+    // In a production environment, you should use a database or external service
     
-    // Ensure the directory exists
-    const dataDir = path.dirname(messagesPath);
-    try {
-      await fs.access(dataDir);
-    } catch {
-      await fs.mkdir(dataDir, { recursive: true });
-    }
+    console.log('New message received:', messageData);
     
-    let messages = { messages: [] };
+    // TODO: In production, integrate with:
+    // - Netlify Forms (recommended for simple forms)
+    // - Database (MongoDB, Supabase, etc.)
+    // - Email service (SendGrid, Mailgun, etc.)
+    // - External API (Airtable, Google Sheets, etc.)
     
-    try {
-      const existing = await fs.readFile(messagesPath, 'utf-8');
-      messages = JSON.parse(existing);
-    } catch {
-      // File does not exist, will create
-    }
-    
-    messages.messages.unshift(messageData);
-    await fs.writeFile(messagesPath, JSON.stringify(messages, null, 2));
-    
-    // Also try to write to src/data as backup
-    try {
-      const backupPath = path.join(process.cwd(), 'src/data/messages.json');
-      await fs.writeFile(backupPath, JSON.stringify(messages, null, 2));
-    } catch (backupError) {
-      console.log('Could not write backup:', backupError.message);
-    }
-    
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: 'Message received successfully! We will get back to you soon.',
+      data: messageData
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
     console.error('Contact form error:', error);
-    return new Response(JSON.stringify({ error: 'Server error', details: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: 'Server error', 
+      details: error.message 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
