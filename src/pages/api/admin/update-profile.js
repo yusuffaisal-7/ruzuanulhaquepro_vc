@@ -41,62 +41,56 @@ export async function POST({ request }) {
         });
       }
       
-      // Create uploads directory if it doesn't exist
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-      try {
-        await fs.access(uploadsDir);
-      } catch {
-        await fs.mkdir(uploadsDir, { recursive: true });
-      }
-      
-      // Generate unique filename
+      // For Netlify, we'll store in /tmp and return a temporary URL
+      // In production, you should use a cloud storage service like AWS S3 or Cloudinary
       const timestamp = Date.now();
       const randomString = Math.random().toString(36).substring(2, 8);
       const extension = path.extname(imageFile.name) || '.jpg';
       const filename = `profile-${timestamp}-${randomString}${extension}`;
-      const filepath = path.join(uploadsDir, filename);
       
-      // Save file
+      // Store in /tmp for now
+      const tmpPath = path.join('/tmp', filename);
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      await fs.writeFile(filepath, buffer);
+      await fs.writeFile(tmpPath, buffer);
       
       profileData.image = `/uploads/${filename}`;
       
-      // Update images list
-      const imagesListPath = path.join(process.cwd(), 'src/data/images.json');
-      let imagesList = { images: [] };
-      
-      try {
-        const existingData = await fs.readFile(imagesListPath, 'utf-8');
-        imagesList = JSON.parse(existingData);
-      } catch {
-        // File doesn't exist, use default
-      }
-      
-      const imageData = {
-        name: filename,
-        originalName: imageFile.name,
-        url: `/uploads/${filename}`,
-        uploadDate: new Date().toISOString(),
-        size: imageFile.size,
-        type: imageFile.type,
-        category: 'profile'
-      };
-      
-      imagesList.images.unshift(imageData);
-      await fs.writeFile(imagesListPath, JSON.stringify(imagesList, null, 2));
+      // Note: In a real production environment, you should upload to cloud storage
+      // and return the cloud URL instead of a local path
     }
     
-    // Read current content
-    const contentPath = path.join(process.cwd(), 'src/data/content.json');
-    const contentData = JSON.parse(await fs.readFile(contentPath, 'utf-8'));
+    // Read current content - try multiple locations
+    let contentData = { profile: {} };
+    const contentPaths = [
+      path.join('/tmp', 'content.json'),
+      path.join(process.cwd(), 'src/data/content.json')
+    ];
+    
+    for (const contentPath of contentPaths) {
+      try {
+        const data = await fs.readFile(contentPath, 'utf-8');
+        contentData = JSON.parse(data);
+        break;
+      } catch (error) {
+        console.log(`Could not read from ${contentPath}:`, error.message);
+      }
+    }
     
     // Update profile, keeping existing data for fields not provided
     contentData.profile = { ...contentData.profile, ...profileData };
     
-    // Write back to file
-    await fs.writeFile(contentPath, JSON.stringify(contentData, null, 2));
+    // Write back to /tmp (Netlify compatible)
+    const tmpContentPath = path.join('/tmp', 'content.json');
+    await fs.writeFile(tmpContentPath, JSON.stringify(contentData, null, 2));
+    
+    // Also try to write to original location as fallback
+    try {
+      const originalContentPath = path.join(process.cwd(), 'src/data/content.json');
+      await fs.writeFile(originalContentPath, JSON.stringify(contentData, null, 2));
+    } catch (writeError) {
+      console.log('Could not write to original location:', writeError.message);
+    }
     
     return new Response(JSON.stringify({ 
       success: true,
